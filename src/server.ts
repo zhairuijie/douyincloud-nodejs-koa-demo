@@ -127,7 +127,7 @@ initService().then(async ({ redis, mongoose}) => {
             success: true,
             data: response.data,
         }
-    });
+    })
 
     app.use(bodyParser());
     app.use(router.routes());
