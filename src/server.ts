@@ -93,6 +93,40 @@ initService().then(async ({ redis, mongoose}) => {
         ctx.body = {
             success: true,
         }
+    }).get('/api/https', async(ctx) => {    //校验https
+        const response = await axios.post(
+            'https://developer.toutiao.com/api/apps/qrcode',
+            // '{\n    "appname": "douyin"\n}',
+            {
+                'appname': 'douyin'
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        ctx.body = {
+            success: true,
+            data: response.data,
+        }
+    }).get('/api/http', async(ctx) => { //校验http
+        const response = await axios.post(
+            'http://developer.toutiao.com/api/apps/qrcode',
+            // '{\n    "appname": "douyin"\n}',
+            {
+                'appname': 'douyin'
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        ctx.body = {
+            success: true,
+            data: response.data,
+        }
     });
 
     app.use(bodyParser());
