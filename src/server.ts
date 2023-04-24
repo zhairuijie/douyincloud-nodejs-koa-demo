@@ -4,8 +4,6 @@ import Router from '@koa/router'
 import Redis from 'ioredis';
 import mongoose from 'mongoose';
 import assert from "assert";
-import fetch from 'node-fetch';
-import axios from "axios";
 
 // 初始化各服务的连接 redis, mongo
 async function initService() {
@@ -22,7 +20,7 @@ async function initService() {
     assert(await redis.echo('echo') === 'echo', `redis echo error`);
 
     const mongoUrl = `mongodb://${MONGO_USERNAME}:${encodeURIComponent(MONGO_PASSWORD)}@${MONGO_ADDRESS}`;
-    await mongoose.connect(mongoUrl);    
+    await mongoose.connect(mongoUrl);
 
     return {
         redis,
@@ -72,7 +70,7 @@ initService().then(async ({ redis, mongoose}) => {
         const name = ctx.query.name as string;
         assert(name?.trim(), `name is required`);
         const data = await Kitten.findOne({ name});
-        
+
         if (data) {
             ctx.body = {
                 success: true,
@@ -95,41 +93,7 @@ initService().then(async ({ redis, mongoose}) => {
         ctx.body = {
             success: true,
         }
-    }).get('/api/https', async(ctx) => {    //校验https
-        const response = await axios.post(
-            'https://developer.toutiao.com/api/apps/qrcode',
-            // '{\n    "appname": "douyin"\n}',
-            {
-                'appname': 'douyin'
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-        ctx.body = {
-            success: true,
-            data: response.data,
-        }
-    }).get('/api/http', async(ctx) => { //校验http
-        const response = await axios.post(
-            'http://developer.toutiao.com/api/apps/qrcode',
-            // '{\n    "appname": "douyin"\n}',
-            {
-                'appname': 'douyin'
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-        ctx.body = {
-            success: true,
-            data: response.data,
-        }
-    })
+    });
 
     app.use(bodyParser());
     app.use(router.routes());
